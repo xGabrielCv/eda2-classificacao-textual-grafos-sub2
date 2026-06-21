@@ -1,5 +1,6 @@
 import json
 import os
+from extrator_dados_steam import limpar_e_tokenizar
 
 # ==============================================================================
 # 1. ESTRUTURA DE DADOS ADICIONAL (FILA CLÁSSICA) - Exigência do Edital
@@ -299,8 +300,25 @@ def classificar_review_bfs_ponderada(grafo, tokens):
                 
     return rotulos_finais
 
+meu_grafo = construir_grafo_subnautica()
 ## ==============================================================================
-# 6. MOTOR PRINCIPAL E RELATÓRIO ANALÍTICO DETALHADO (Critério 5)
+# 6. NOVAS REVIEWS PARA CLASSIFICAR
+# ==============================================================================
+def nova_review():
+    review = input("Escreva aqui a nova review: ")
+    review = limpar_e_tokenizar(review)
+    tokens_unicos = []
+    for t in review:
+        if t not in tokens_unicos: 
+            tokens_unicos.append(t)
+    rotulos = classificar_review_bfs_ponderada(meu_grafo, tokens_unicos)
+    print("Essa review possui tendências de: ")
+    if "Casual" in rotulos: print("Casual")
+    if "Hardcore" in rotulos: print("Hardcore")
+    if "Técnico" in rotulos: print("Técnico")
+
+## ==============================================================================
+# 7. MOTOR PRINCIPAL E RELATÓRIO ANALÍTICO DETALHADO (Critério 5)
 # ==============================================================================
 if __name__ == "__main__":
     nome_ficheiro = "reviews_subnautica2.json"
@@ -309,7 +327,6 @@ if __name__ == "__main__":
         print(f"Erro: O ficheiro {nome_ficheiro} não foi encontrado!")
         exit()
         
-    meu_grafo = construir_grafo_subnautica()
     with open(nome_ficheiro, "r", encoding="utf-8") as f:
         dataset = json.load(f)
         
@@ -389,3 +406,8 @@ if __name__ == "__main__":
         print(f" -> [ Todas as Três Categorias ]    : {c_todas_categorias}")
         print("    (Textos extremamente longos e abrangentes)")
     print("=======================================================================")
+    try:
+        while (True):
+            nova_review()
+    except KeyboardInterrupt:
+        pass
