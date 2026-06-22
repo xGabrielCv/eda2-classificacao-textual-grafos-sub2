@@ -104,18 +104,21 @@ def limpar_e_tokenizar(texto_review):
         "faz", "feito", "fizeram"
     ]
     
-    palavras_validas = []
+    tokens_limpos = []
     for palavra in todas_palavras:
         eh_stopword = False
         for stop in stopwords:
             if palavra == stop:
                 eh_stopword = True
                 break
-                
+
         if not eh_stopword and len(palavra) > 1 and not palavra.isdigit():
-            palavras_validas.append(palavra)
+            tokens_limpos.append(palavra)
             
-    return palavras_validas
+    tokens_unicos = []
+    for t in tokens_limpos:
+        if t not in tokens_unicos: tokens_unicos.append(t)
+    return tokens_unicos
 
 # ==========================================
 # MOTOR DE EXECUÇÃO LIMITADO
